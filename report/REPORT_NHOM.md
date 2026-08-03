@@ -99,11 +99,11 @@ Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu:
 
 | # | Câu hỏi (Query) | Câu trả lời chuẩn (Gold Answer) | Chunk nào chứa thông tin? |
 |---|-------|-------------------------------|--------------------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
+| 1 | Sinh viên phải đóng học phí và bảo hiểm y tế như thế nào? | Đóng học phí, bảo hiểm y tế và các lệ phí khác đầy đủ, đúng quy định; hoàn trả vốn vay đúng hạn nếu có. | `quy-che-32...::chunk_19` hoặc `10-2016...::chunk_16` |
+| 2 | Khi đánh giá kết quả rèn luyện, quy trình và tiêu chí cần bảo đảm điều gì? | Thực hiện nghiêm túc quy trình và tiêu chí; bảo đảm khách quan, công khai, công bằng, chính xác; tôn trọng bình đẳng, dân chủ và phối hợp các đơn vị liên quan. | `16-2015-tt-bgddt-ve-diem-ren-luyen::chunk_10` |
+| 3 | Quy định quản lý và sử dụng học bổng của ĐHQGHN áp dụng đối với ai? | Áp dụng cho học sinh, sinh viên, học viên cao học, nghiên cứu sinh của ĐHQGHN và các đơn vị, bộ phận chức năng liên quan. | `4618-nam-2024-quy-dinh-hoc-bong-vnu::chunk_6-7` |
+| 4 | Học phí từ năm học 2023-2024 của cơ sở chưa tự bảo đảm chi thường xuyên được quy định thế nào? | Giữ ổn định bằng mức thu học phí năm học 2021-2022 do Hội đồng nhân dân tỉnh đã ban hành tại địa phương. | `97-cpsigned::chunk_6` |
+| 5 | Sinh viên chương trình cử nhân khoa học tài năng nào được xét học bổng hỗ trợ chi phí học tập? | Sinh viên các chương trình cử nhân khoa học tài năng Toán, Vật lý, Hóa học, Sinh học được xét cấp học bổng hỗ trợ chi phí học tập. | `970-nam-hoc-2023-2024::chunk_11` |
 
 ### Tổng hợp chất lượng truy xuất của nhóm
 
@@ -111,14 +111,14 @@ Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu:
 
 | # | Câu hỏi | Chiến lược tốt nhất cho câu này | Có chunk liên quan trong top-3? | Ghi chú |
 |---|---------|-------------------------------|-------------------------------|---------|
-| 1 | | | | |
-| 2 | | | | |
-| 3 | | | | |
-| 4 | | | | |
-| 5 | | | | |
+| 1 | Nghĩa vụ học phí và bảo hiểm y tế | RecursiveChunker (500 ký tự) | Có | Hai quy chế có nội dung tương đương cùng xuất hiện ở top-2. |
+| 2 | Nguyên tắc đánh giá rèn luyện | RecursiveChunker (500 ký tự) | Có | Chunk nguồn đứng top-1. |
+| 3 | Đối tượng áp dụng học bổng ĐHQGHN | RecursiveChunker (500 ký tự) | Có | Chunk nguồn đứng top-1. |
+| 4 | Mức học phí năm 2023-2024 | RecursiveChunker (500 ký tự) | Có | Chunk nguồn đứng top-1. |
+| 5 | Học bổng hỗ trợ chi phí học tập | RecursiveChunker (500 ký tự) + `category=scholarship` | Có | Lọc metadata giữ kết quả trong nhóm tài liệu học bổng. |
 
 **Lọc bằng metadata có giúp ích không? Ở câu hỏi nào?**
-> *Viết 2-3 câu:*
+> Có. Với câu 5, bộ lọc `category=scholarship` loại các văn bản học phí và quy chế công tác sinh viên trước khi xếp hạng, nên cả ba kết quả đều thuộc tài liệu học bổng. Bộ lọc cần dùng vừa đủ chặt; nếu lọc sai danh mục, chunk liên quan có thể bị loại trước khi truy xuất.
 
 ---
 
