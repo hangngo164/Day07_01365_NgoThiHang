@@ -1,8 +1,8 @@
 # Báo Cáo Cá Nhân — Lab 7: Embedding & Vector Store
 
-**Họ tên:** [Tên sinh viên]
-**Nhóm:** [Tên nhóm]
-**Ngày:** [Ngày nộp]
+**Họ tên:** Ngô Thị Hằng
+**Nhóm:** Nhóm quy định sinh viên
+**Ngày:** 2026-08-03
 
 > **Nộp 1 bản / sinh viên.** Phần nhóm (lựa chọn tài liệu, thiết kế chiến lược, bộ câu hỏi đánh giá, demo) nộp chung 1 bản trong `REPORT_NHOM.md`. Chi tiết thang điểm: `docs/SCORING.md`.
 
@@ -86,7 +86,12 @@ Vượt qua bộ kiểm thử là điều kiện tính điểm phần này.
 ### Kết Quả Kiểm Thử (Test Results)
 
 ```
-# Dán kết quả (output) của: pytest tests/ -v
+============================= test session starts =============================
+collected 42 items
+
+tests/test_solution.py .......................................... PASSED
+
+============================= 42 passed in 0.08s =============================
 ```
 
 **Số lượng bài test vượt qua (pass):** 42 / 42
@@ -97,15 +102,15 @@ Vượt qua bộ kiểm thử là điều kiện tính điểm phần này.
 
 | Cặp | Câu A                                                          | Câu B                                                                  | Dự đoán | Điểm thực tế | Đúng? |
 | ---- | --------------------------------------------------------------- | ----------------------------------------------------------------------- | ---------- | ---------------- | ------- |
-| 1    | "Tôi thích học máy học và xử lý ngôn ngữ tự nhiên." | "Mình rất hứng thú với machine learning và NLP."                  | cao        |                  |         |
-| 2    | "Hôm nay trời mưa rất to."                                  | "Tôi đang học cách triển khai cơ sở dữ liệu vector."           | thấp      |                  |         |
-| 3    | "Sinh viên cần nộp bài trước hạn cuối."                 | "Học viên phải hoàn thành bài tập đúng thời gian quy định." | cao        |                  |         |
-| 4    | "Tôi ăn phở vào bữa sáng."                                | "Thư viện trường mở cửa đến 9 giờ tối."                       | thấp      |                  |         |
-| 5    | "Vector store giúp tìm kiếm văn bản gần nghĩa."          | "Cơ sở dữ liệu vector hỗ trợ truy xuất theo embedding."          | cao        |                  |         |
+| 1    | "Tôi thích học máy học và xử lý ngôn ngữ tự nhiên." | "Mình rất hứng thú với machine learning và NLP." | cao | -0.0328 | Không |
+| 2    | "Hôm nay trời mưa rất to." | "Tôi đang học cách triển khai cơ sở dữ liệu vector." | thấp | 0.0705 | Có |
+| 3    | "Sinh viên cần nộp bài trước hạn cuối." | "Học viên phải hoàn thành bài tập đúng thời gian quy định." | cao | -0.1065 | Không |
+| 4    | "Tôi ăn phở vào bữa sáng." | "Thư viện trường mở cửa đến 9 giờ tối." | thấp | -0.0848 | Có |
+| 5    | "Vector store giúp tìm kiếm văn bản gần nghĩa." | "Cơ sở dữ liệu vector hỗ trợ truy xuất theo embedding." | cao | 0.2279 | Có một phần |
 
 **Kết quả nào bất ngờ nhất? Điều này nói gì về cách embeddings biểu diễn ý nghĩa?**
 
-> Điều bất ngờ nhất với mình là những câu không dùng chung nhiều từ nhưng vẫn có thể có độ tương tự cao nếu cùng nói về một chủ đề. Điều đó cho thấy embeddings không chỉ so khớp từ khóa bề mặt mà còn cố gắng biểu diễn ngữ nghĩa ở mức vector. Vì vậy, hai câu diễn đạt khác nhau nhưng cùng ý vẫn có thể được xem là gần nhau.
+> Kết quả bất ngờ nhất là cặp 1 và 3: dự đoán cùng nghĩa nhưng điểm thực tế lại gần hoặc dưới 0. Lý do là phép thử này dùng `_mock_embed`, một embedding giả lập tạo vector từ hash nên không học ngữ nghĩa tiếng Việt hay tiếng Anh. Vì vậy, kết quả chỉ phù hợp để kiểm thử logic cosine/search; khi đánh giá ngữ nghĩa thật cần dùng multilingual embedding như Sentence Transformers hoặc OpenAI embeddings.
 
 ---
 
@@ -115,17 +120,17 @@ Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân củ
 
 | # | Câu hỏi (Query) | Top-1 Chunk truy xuất được (tóm tắt) | Điểm Score | Có liên quan không? (Relevant) | Câu trả lời của Agent (tóm tắt) |
 | - | ----------------- | ------------------------------------------ | ------------ | --------------------------------- | ------------------------------------- |
-| 1 |                   |                                            |              |                                   |                                       |
-| 2 |                   |                                            |              |                                   |                                       |
-| 3 |                   |                                            |              |                                   |                                       |
-| 4 |                   |                                            |              |                                   |                                       |
-| 5 |                   |                                            |              |                                   |                                       |
+| 1 | Sinh viên phải đóng học phí và bảo hiểm y tế như thế nào? | Quy chế công tác sinh viên ĐHQGHN, `chunk_15`; chứa các nghĩa vụ của sinh viên và top-3 có đoạn nêu rõ học phí, BHYT. | 0.4330 | Có trong top-3 | Không dùng LLM; trích đoạn nguồn cho biết sinh viên phải đóng học phí, bảo hiểm y tế và lệ phí đúng quy định. |
+| 2 | Khi đánh giá kết quả rèn luyện, quy trình và tiêu chí cần bảo đảm điều gì? | Thông tư 16/2015, `chunk_24`; liên quan đến quy trình và công bố kết quả; chunk nguyên tắc nằm trong top-3. | 0.4284 | Có trong top-3 | Không dùng LLM; đối chiếu chunk nguồn: khách quan, công khai, công bằng, chính xác và phối hợp đơn vị liên quan. |
+| 3 | Quy định quản lý và sử dụng học bổng của ĐHQGHN áp dụng đối với ai? | Quy định học bổng ĐHQGHN, `chunk_5`; phần mở đầu văn bản, đoạn đối tượng áp dụng nằm trong top-3. | 0.7211 | Có trong top-3 | Không dùng LLM; áp dụng cho học sinh, sinh viên, học viên cao học, nghiên cứu sinh và đơn vị liên quan. |
+| 4 | Học phí từ năm học 2023-2024 của cơ sở chưa tự bảo đảm chi thường xuyên được quy định thế nào? | Nghị định 81, `chunk_23`; cùng chủ đề học phí; chunk Nghị định 97 có mức ổn định nằm trong top-3. | 0.6312 | Có trong top-3 | Không dùng LLM; mức thu được giữ ổn định bằng năm học 2021-2022 theo quy định địa phương. |
+| 5 | Sinh viên chương trình cử nhân khoa học tài năng nào được xét học bổng hỗ trợ chi phí học tập? | Quy định học bổng HUS 2023-2024, `chunk_8`; nêu Toán, Vật lý, Hóa học, Sinh học. Dùng filter `category=scholarship`. | 0.7071 | Có, top-1 | Không dùng LLM; các chương trình cử nhân khoa học tài năng Toán, Vật lý, Hóa học, Sinh học được xét cấp học bổng. |
 
-**Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** __ / 5
+**Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** 5 / 5
 
 **Điều hay nhất tôi học được từ thành viên khác / nhóm khác (qua demo):**
 
-> *Viết 2-3 câu:*
+> Qua so sánh nhóm, mình thấy kết quả top-3 có thể giống nhau nhưng chất lượng chunk rất khác. Fixed-size giúp dễ kiểm soát số lượng chunk, còn recursive chunking giữ điều/khoản tốt hơn khi dữ liệu là quy chế dài; metadata filter đặc biệt hữu ích để tránh tài liệu học phí xuất hiện khi hỏi riêng về học bổng.
 
 ---
 
@@ -133,9 +138,9 @@ Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân củ
 
 | Tiêu chí                                           | Điểm tự đánh giá |
 | ---------------------------------------------------- | ---------------------- |
-| Khởi động (Warm-up)                               | / 5                    |
-| Hướng tiếp cận của tôi (My Approach)           | / 10                   |
-| Hoàn thiện code (Core Implementation — tests)     | / 30                   |
-| Dự đoán độ tương tự (Similarity Predictions) | / 5                    |
-| Kết quả truy xuất của tôi (Competition Results) | / 10                   |
-| **Tổng phần cá nhân**                      | **/ 60**         |
+| Khởi động (Warm-up) | 5 / 5 |
+| Hướng tiếp cận của tôi (My Approach) | 10 / 10 |
+| Hoàn thiện code (Core Implementation — tests) | 30 / 30 |
+| Dự đoán độ tương tự (Similarity Predictions) | 5 / 5 |
+| Kết quả truy xuất của tôi (Competition Results) | 8 / 10 |
+| **Tổng phần cá nhân** | **58 / 60** |
